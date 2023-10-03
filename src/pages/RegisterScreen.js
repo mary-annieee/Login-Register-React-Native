@@ -36,21 +36,18 @@ const RegisterScreen = ({navigation}) => {
       !confirm_password
     ) {
       Alert.alert('Error', 'Field cannot be empty');
-    } 
-    else if (!validateEmail(email)) {
+    } else if (!validateEmail(email)) {
       Alert.alert('Error', 'Invalid Email');
-    }
-    else  if(password.length<6){
+    } else if (password.length < 6) {
       Alert.alert('Invalid Password', 'Mininum password length is 6 character');
-      }
-      else if(password!=confirm_password){
-        Alert.alert('Error',"Password doesn't match")
-
-      }
-    else {
-      Alert.alert('Successfully signed up',"enter the email and password to login")
-      navigation.navigate('Login');    
-      
+    } else if (password != confirm_password) {
+      Alert.alert('Error', "Password doesn't match");
+    } else {
+      Alert.alert(
+        'Successfully signed up',
+        'enter the email and password to login',
+      );
+      navigation.navigate('Login');
     }
   };
 
@@ -144,18 +141,22 @@ const RegisterScreen = ({navigation}) => {
                 value={email}
                 onChangeText={text => setEmail(text)}
               />
-              <View style={{marginRight:70}}>
-            {errorEmail && <Text style={{ color: 'red', fontSize:12}}>{errorEmail}</Text>}
-            </View>
+              <View style={{marginRight: 70}}>
+                {errorEmail && (
+                  <Text style={{color: 'red', fontSize: 12}}>{errorEmail}</Text>
+                )}
+              </View>
               <Field
                 placeholder="Password"
                 secureTextEntry={true}
                 value={password}
                 onChangeText={text => setPassword(text)}
               />
-              <View style={{marginRight:70}}>
-            {errorPass && <Text style={{ color: 'red', fontSize:12}}>{errorPass}</Text>}
-            </View>
+              <View style={{marginRight: 70}}>
+                {errorPass && (
+                  <Text style={{color: 'red', fontSize: 12}}>{errorPass}</Text>
+                )}
+              </View>
               <Field
                 placeholder="Confirm Password"
                 value={confirm_password}
