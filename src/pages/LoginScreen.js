@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Background from '../components/Background';
 import Btn from '../components/Btn';
 import Field from '../components/Feild';
+import {db} from '../../Database';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -13,14 +14,48 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = () => {
     if (!email || !password) {
       Alert.alert('Error', 'Feild cannot be empty');
-    } else if (!validateEmail(email)) {
-      Alert.alert('Error', 'Invalid Email');
-    } else if (password.length < 6) {
-      Alert.alert('Error', 'Mininum length is 6 character');
-    } else {
-      Alert.alert('Welcome', 'Logged In');
-      navigation.navigate('Home');
+    }  else {
+      verifyUserLogin(
+        email,
+        password,
+        user => {
+          Alert.alert('Welcome', 'Logged In');
+          // Navigate to the home screen or perform other actions as needed
+          navigation.navigate('Home');
+        },
+        error => {
+          setError(error);
+        }
+      );
     }
+  };
+  const verifyUserLogin = (email, password, onSuccess, onError) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM users WHERE email = ?',
+        [email],
+        (tx, results) => {
+          const len = results.rows.length;
+          if (len === 1) {
+            const user = results.rows.item(0);
+            if (user.password === password) {
+              // Passwords match, user is authenticated
+              onSuccess(user);
+            } else {
+              // Passwords do not match
+              onError('Invalid password');
+            }
+          } else {
+            // No user with the given email found
+            onError('User not found');
+          }
+        },
+        error => {
+          console.error('Error verifying user login:', error);
+          onError('An error occurred while verifying login');
+        }
+      );
+    });
   };
   function validateEmail(email) {
     const regex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;

@@ -2,6 +2,7 @@ import SQLite from 'react-native-sqlite-storage';
 
 const db = SQLite.openDatabase({ name: 'mydb.db', location: 'default' });
 
+
 const initializeDatabase = () => {
   db.transaction(tx => {
     tx.executeSql(
