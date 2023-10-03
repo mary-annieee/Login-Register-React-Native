@@ -21,7 +21,7 @@ const LoginScreen = ({navigation}) => {
         user => {
           Alert.alert('Welcome', 'Logged In');
           // Navigate to the home screen or perform other actions as needed
-          navigation.navigate('Home');
+          navigation.navigate('Home',{ userId: user.id });
         },
         error => {
           setError(error);
@@ -57,10 +57,7 @@ const LoginScreen = ({navigation}) => {
       );
     });
   };
-  function validateEmail(email) {
-    const regex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-    return regex.test(email);
-  }
+  
 
   return (
     <Background>

@@ -194,12 +194,7 @@ const RegisterScreen = ({navigation}) => {
                   />
                 )}
               </View>
-              {/* <Text h4>Accept Terms and Conditions</Text>
-      <CheckBox
-        title="I agree to the terms and conditions"
-        checked={isChecked}
-        onPress={handleCheck}
-      /> */}
+            
               <View>
                 <Btn
                   textColor="white"
