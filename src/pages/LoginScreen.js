@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-//hello
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Background from '../components/Background';
 import Btn from '../components/Btn';
