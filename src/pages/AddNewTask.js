@@ -47,7 +47,7 @@ import {
     useEffect(() => {
         db.transaction(tx => {
     tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS taskDB (id INTEGER PRIMARY KEY AUTOINCREMENT, priority INTEGER, task_name TEXT, description VARCHAR)',
+      'CREATE TABLE IF NOT EXISTS taskDB (id INTEGER PRIMARY KEY AUTOINCREMENT, priority INTEGER, task_name TEXT, description VARCHAR(50))',
       [],
       (tx, results) => {
         console.log('Database initialized successfully');

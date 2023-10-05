@@ -6,8 +6,8 @@ import RegisterScreen from './src/pages/RegisterScreen';
 import HomeScreen from './src/pages/Home';
 import { List } from 'react-native-paper';
 import ListScreen from './src/pages/List';
-import AddNewProduct from './src/pages/AddNewTask';
-import EditProduct from './src/pages/EditProduct';
+import AddNewTask from './src/pages/AddNewTask';
+import EditTask from './src/pages/EditTask';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,13 +16,13 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName="Login">
+        initialRouteName="Home">
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="List" component={ListScreen} />
-        <Stack.Screen name="AddNewProduct" component={AddNewProduct} />
-        <Stack.Screen name="EditProduct" component={EditProduct} />
+        <Stack.Screen name="AddNewProduct" component={AddNewTask} />
+        <Stack.Screen name="EditProduct" component={EditTask} />
       </Stack.Navigator>
     </NavigationContainer>
   );

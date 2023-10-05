@@ -74,9 +74,9 @@ const Home = () => {
                   onPress={() => {
                     navigation.navigate('EditProduct', {
                       data: {
-                        name: item.priority,
-                        email: item.task_name,
-                        address: item.description,
+                        priority: item.priority,
+                        task_name: item.task_name,
+                        description: item.description,
                         id: item.id,
                       },
                     });
