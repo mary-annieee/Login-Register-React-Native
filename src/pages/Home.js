@@ -72,7 +72,7 @@ const Home = () => {
               <View style={styles.belowView}>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('EditProduct', {
+                    navigation.navigate('EditTask', {
                       data: {
                         priority: item.priority,
                         task_name: item.task_name,
@@ -103,7 +103,7 @@ const Home = () => {
       <TouchableOpacity
         style={styles.addNewBtn}
         onPress={() => {
-          navigation.navigate('AddNewProduct');
+          navigation.navigate('AddNewTask');
         }}>
         <Text style={styles.btnText}>Add New Task</Text>
       </TouchableOpacity>
