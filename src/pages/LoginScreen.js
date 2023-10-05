@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Background from '../components/Background';
 import Btn from '../components/Btn';
 import Field from '../components/Feild';
-import {db} from '../../Database';
+import {db} from '../utils/Database';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -14,18 +14,18 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = () => {
     if (!email || !password) {
       Alert.alert('Error', 'Feild cannot be empty');
-    }  else {
+    } else {
       verifyUserLogin(
         email,
         password,
         user => {
           Alert.alert('Welcome', 'Logged In');
           // Navigate to the home screen or perform other actions as needed
-          navigation.navigate('Home',{ userId: user.id });
+          navigation.navigate('Home', {userId: user.id});
         },
         error => {
           setError(error);
-        }
+        },
       );
     }
   };
@@ -53,11 +53,10 @@ const LoginScreen = ({navigation}) => {
         error => {
           console.error('Error verifying user login:', error);
           onError('An error occurred while verifying login');
-        }
+        },
       );
     });
   };
-  
 
   return (
     <Background>

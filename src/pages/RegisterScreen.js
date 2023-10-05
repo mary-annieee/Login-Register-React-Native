@@ -12,7 +12,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Background from '../components/Background';
 import Btn from '../components/Btn';
 import Field from '../components/Feild';
-import {db, initializeDatabase} from '../../Database';
+import {db, initializeDatabase} from '../utils/Database';
 
 const RegisterScreen = ({navigation}) => {
   const [first_name, setFirstName] = useState('');
@@ -24,11 +24,11 @@ const RegisterScreen = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-
   useEffect(() => {
     initializeDatabase();
   }, []);
 
+  //on clicking sign up validating the Details for the registration and saving in Database
   const handleLogin = () => {
     if (
       !first_name ||
@@ -47,27 +47,26 @@ const RegisterScreen = ({navigation}) => {
       Alert.alert('Error', "Password doesn't match");
     } else {
       // Insert user data into the SQLite database
-    db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO users (first_name, last_name, gender, email, password, dob) VALUES (?, ?, ?, ?, ?, ?)',
-        [first_name, last_name, gender, email, password, date.toDateString()],
-        (tx, results) => {
-          if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Successfully signed up',
-              'Enter the email and password to login'
-            );
-            navigation.navigate('Login');
-          } else {
-            Alert.alert('Error', 'Registration failed');
-          }
-        },
-        error => {
-          console.error('Error inserting user data:', error);
-          Alert.alert('Error', 'Registration failed');
-        }
-      );
-    });
+      db.transaction(tx => {
+        tx.executeSql(
+          'INSERT INTO users (first_name, last_name, gender, email, password, dob) VALUES (?, ?, ?, ?, ?, ?)',
+          [first_name, last_name, gender, email, password, date.toDateString()],
+          (tx, results) => {
+            if (results.rowsAffected > 0) {
+              Alert.alert(
+                'Successfully signed up',
+                'Enter the email and password to login',
+              );
+              navigation.navigate('Login');
+            } else {
+              Alert.alert('Error', 'Registration failed');
+            }
+          },
+          error => {
+            console.error('Error inserting user data:', error);
+          },
+        );
+      });
     }
   };
 
@@ -161,14 +160,14 @@ const RegisterScreen = ({navigation}) => {
                 value={email}
                 onChangeText={text => setEmail(text)}
               />
-              
+
               <Field
                 placeholder="Password"
                 secureTextEntry={true}
                 value={password}
                 onChangeText={text => setPassword(text)}
               />
-             
+
               <Field
                 placeholder="Confirm Password"
                 value={confirm_password}
@@ -194,7 +193,7 @@ const RegisterScreen = ({navigation}) => {
                   />
                 )}
               </View>
-            
+
               <View>
                 <Btn
                   textColor="white"
