@@ -4,6 +4,7 @@ import Background from '../components/Background';
 import Btn from '../components/Btn';
 import Field from '../components/Feild';
 import {db} from '../utils/Database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -19,9 +20,20 @@ const LoginScreen = ({navigation}) => {
         email,
         password,
         user => {
+          // Alert.alert('Welcome', 'Logged In');
+          // // Navigate to the home screen or perform other actions as needed
+          // navigation.navigate('Details', {userId: user.id});
+          //Store session information
+        AsyncStorage.setItem('userId', user.id.toString())
+        .then(() => {
           Alert.alert('Welcome', 'Logged In');
           // Navigate to the home screen or perform other actions as needed
-          navigation.navigate('Home', {userId: user.id});
+          navigation.navigate('BottomNavigator', { userId: user.id });
+        })
+        .catch(error => {
+          console.error('Error storing session:', error);
+          setError('An error occurred while storing the session');
+        });
         },
         error => {
           setError(error);

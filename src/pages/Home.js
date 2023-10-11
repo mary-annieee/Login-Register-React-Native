@@ -6,15 +6,17 @@ import {
   FlatList,
   Alert,
   Image,
+  Button
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {openDatabase} from 'react-native-sqlite-storage';
 
+
 let db = openDatabase({name: 'UserDatabase.db'});
 
-const Home = () => {
-
+const Home = (rote) => {
+const {userId} = route.params;
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const [taskList, setTaskList] = useState([]);
