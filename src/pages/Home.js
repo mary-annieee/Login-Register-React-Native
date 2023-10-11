@@ -15,7 +15,7 @@ import {openDatabase} from 'react-native-sqlite-storage';
 
 let db = openDatabase({name: 'UserDatabase.db'});
 
-const Home = (rote) => {
+const Home = (route) => {
 const {userId} = route.params;
   const isFocused = useIsFocused();
   const navigation = useNavigation();

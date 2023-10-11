@@ -16,13 +16,14 @@ import {
     const route = useRoute();
     console.log(route.params.data);
  const navigation = useNavigation();
-    const [priority, setPriority] = useState(route.params.data.priority);
-    const [task_name, setTaskName] = useState(route.params.data.task_name);
-    const [description, setDescription] = useState(route.params.description);
+    const [priority, setPriority] = useState(route.params.data.first_name);
+    const [task_name, setTaskName] = useState(route.params.data.last_name);
+    const [description, setDescription] = useState(route.params.email);
+    
     const updateUser = () => {
       db.transaction(tx => {
         tx.executeSql(
-          'UPDATE taskDB set priority=?, task_name=? , description=? where id=?',
+          'UPDATE users set first_name=?, last_name=? , email=? where id=?',
           [priority, task_name, description, route.params.data.id],
           (tx, results) => {
             console.log('Results', results.rowsAffected);
@@ -33,7 +34,7 @@ import {
                 [
                   {
                     text: 'Ok',
-                    onPress: () => navigation.navigate('Home'),
+                    onPress: () => navigation.navigate('Details'),
                   },
                 ],
                 {cancelable: false},
@@ -44,9 +45,9 @@ import {
       });
     };
     useEffect(() => {
-      setPriority(route.params.data.priority);
-      setTaskName(route.params.data.task_name);
-      setDescription(route.params.data.description);
+      setPriority(route.params.data.first_name);
+      setTaskName(route.params.data.last_name);
+      setDescription(route.params.data.email);
     }, []);
   
     return (
@@ -54,7 +55,7 @@ import {
         <TextInput
           placeholder="Enter User Name"
           style={styles.input}
-          value={priority.toString()}
+          value={priority}
           onChangeText={txt => setPriority(txt)}
         />
         <TextInput
@@ -74,7 +75,7 @@ import {
           onPress={() => {
             updateUser();
           }}>
-          <Text style={styles.btnText}>Save Task</Text>
+          <Text style={styles.btnText}>Save User</Text>
         </TouchableOpacity>
       </View>
     );

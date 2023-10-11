@@ -29,12 +29,7 @@ function MainContainer({route}) {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
-      // tabBarOptions={{
-      //   activeTintColor: 'tomato',
-      //   inactiveTintColor: 'grey',
-      //   labelStyle: { paddingBottom: 10, fontSize: 10 },
-      //   style: { padding: 10, height: 70}
-      // }}
+      
     >
       <Tab.Screen
         name={homeName}

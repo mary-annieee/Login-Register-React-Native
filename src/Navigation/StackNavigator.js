@@ -6,8 +6,7 @@ import BottomNavigator from './BottomNavigator';
 import LoginScreen from '../pages/LoginScreen';
 import RegisterScreen from '../pages/RegisterScreen';
 import Details from '../pages/Details';
-
-
+import EditTask from '../pages/EditUser';
 
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +21,7 @@ const StackNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />    
         <Stack.Screen name="Register" component={RegisterScreen} />    
         <Stack.Screen name="Details" component={Details} /> 
+        <Stack.Screen name="EditTask" component={EditTask} /> 
       </Stack.Navigator>
   );
 };
