@@ -1,10 +1,47 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet,TouchableOpacity,Image,Alert} from 'react-native';
+import {View, Text, StyleSheet,TouchableOpacity,Image,Alert,Modal,TextInput} from 'react-native';
 import {db} from '../utils/Database.js';
 import Btn from '../components/Btn';
+import {openDatabase} from 'react-native-sqlite-storage';
+
 const Details = ({route,navigation}) => {
-  const [user, setUser] = useState(null);
+  let db = openDatabase({name: 'mydb.db'});
+  const [user, setUser] = useState({});
+  const [first_name, setFirstName] = useState(user.first_name);
+  const [last_name, setLastName] = useState(user.last_name);
+  const [email, setEmail] = useState(user.email);
   const {userId} = route.params; 
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+
+  const toggleEditModal = () => {
+    setIsEditModalVisible(!isEditModalVisible);
+  };
+  const saveEditedUser = () => {
+    // Perform the user data update logic here (e.g., update the database)
+    // Then close the modal
+    console.log(first_name);
+      db.transaction(tx => {
+        tx.executeSql(
+          'UPDATE users SET first_name=?,last_name=?,email=? WHERE id=?',
+          [first_name,last_name,email,user.id],
+          (tx, results) => {
+            console.log('Results', results.rowsAffected);
+            if (results.rowsAffected > 0) {
+              Alert.alert(
+                'Success',
+                'Task updated successfully',
+              );
+            } else {Alert.alert('Updation Failed');}
+          },
+          (error) => {
+            console.error('Error updating user details:', error);
+            Alert.alert('Error', 'Failed to update user details');
+          }
+        );
+      });
+    toggleEditModal();
+  };
+  
 
   useEffect(() => {
     // Retrieve user details from the database based on user ID or email
@@ -18,6 +55,7 @@ const Details = ({route,navigation}) => {
           if (len === 1) {
             const userData = results.rows.item(0);
             setUser(userData);
+            
           }
         },
         error => {
@@ -70,23 +108,55 @@ navigation.navigate('Login');
       )}
       <View style={styles.belowView}>
                 <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('EditTask', {
-                      data: {
-                        id: user.id,
-                        first_name: user.first_name,
-                        last_name: user.last_name,
-                        email: user.email,
-                        gender: user.gender,
-                        dob: user.dob,
-                      },
-                    });
+                  onPress={() => {toggleEditModal()
                   }}>
                   <Image
                     source={require('../assets/edit.png')}
                     style={styles.icons}
                   />
                 </TouchableOpacity>
+                
+                <Modal
+      visible={isEditModalVisible}
+      transparent={true}
+      animationType="slide">
+      <View style={styles.modalContainer}>
+        {/* Modal content, e.g., edit form */}
+        <View style={{backgroundColor:'white',height:300,width:'90%',padding:30,borderRadius:10}}>
+        <Text>Edit User Details</Text>
+        <TextInput
+          placeholder="First Name"
+          value={first_name}
+          onChangeText={(text) => setFirstName(text)}
+        />
+         <TextInput
+          placeholder="Enter User Email"
+          value={last_name}
+          onChangeText={txt => setLastName(txt)}
+        />
+        <TextInput
+          placeholder="Enter User Address"
+          value={email}
+          onChangeText={txt => setEmail(txt)}
+        />
+        {/* Add more input fields for other user details */}
+        <View style={styles.buttonContainer}>
+  <TouchableOpacity
+    style={styles.button1}
+    onPress={saveEditedUser}
+  >
+    <Text style={{color:'white'}}>Save</Text>
+  </TouchableOpacity>
+  <TouchableOpacity
+    style={styles.button1}
+    onPress={toggleEditModal}
+  >
+    <Text style={{color:'white'}}>Cancel</Text>
+  </TouchableOpacity>
+</View>
+        </View>
+      </View>
+    </Modal>
                 <TouchableOpacity
                   onPress={() => {
                     
@@ -154,6 +224,23 @@ const styles = StyleSheet.create({
   },
   button:{
     marginTop:70,
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  button1: {
+    backgroundColor: 'darkgreen', // You can set your desired background color
+    padding: 10,
+    margin: 5,
+    
+  },
 });
 export default Details;

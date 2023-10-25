@@ -1,81 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import axios from 'axios';
+import React, {useState, useEffect} from 'react';
+import {FlatList, StyleSheet, SafeAreaView} from 'react-native';
+import ListItem from '../components/ListItem';
+import {getMarketData} from '../services/crptoService';
 
-const API_KEY = 'W85BN2NQ3OB6S23G';
-
-const StockApp = () => {
-  const [stockData, setStockData] = useState([]);
+export default function App() {
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey=${API_KEY}`
-        );
-        const data = response.data;
-        const symbols = Object.keys(data['Time Series (5min)']);
-        const stockDetails = symbols.map((symbol) => ({
-          symbol,
-          data,
-        }));
-        setStockData(stockDetails);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+    const fetchMarketData = async () => {
+      const marketData = await getMarketData();
+      setData(marketData);
     };
 
-    fetchData();
+    fetchMarketData();
   }, []);
 
-  const renderItem = ({ item }) => {
-    const { symbol, data } = item;
-    const latestData = data['Time Series (5min)'];
-
-    return (
-      <View style={styles.item}>
-        <Text>MSFT</Text>
-        {Object.keys(latestData).map((timestamp) => (
-          <View key={timestamp}>
-            <Text>Timestamp: {timestamp}</Text>
-            <Text>Open: {latestData[timestamp]['1. open']}</Text>
-            <Text>High: {latestData[timestamp]['2. high']}</Text>
-            <Text>Low: {latestData[timestamp]['3. low']}</Text>
-            <Text>Close: {latestData[timestamp]['4. close']}</Text>
-            <Text>--------------------------</Text>
-          </View>
-        ))}
-      </View>
-    );
-  };
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
-        data={stockData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.symbol}
+        keyExtractor={item => item.id}
+        data={data}
+        renderItem={({item}) => (
+          <ListItem
+            name={item.name}
+            symbol={item.symbol}
+            currentPrice={item.current_price}
+            priceChangePercentage7d={
+              item.price_change_percentage_7d_in_currency
+            }
+            logoUrl={item.image}
+          />
+        )}
       />
-    </View>
+    </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#fff',
   },
-  header: {
+  titleWrapper: {
+    marginTop: 20,
+    paddingHorizontal: 16,
+  },
+  largeTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
   },
-  item: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#A9ABB1',
+    marginHorizontal: 16,
+    marginTop: 16,
+  },
+  bottomSheet: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
-
-export default StockApp;

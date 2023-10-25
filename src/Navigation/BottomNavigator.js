@@ -5,7 +5,7 @@ import HomeScreen from '../pages/StockRate';
 import DetailsScreen from '../pages/Details';
 
 //Screen names
-const homeName = 'Stocks';
+const homeName = 'Markets';
 const detailsName = 'Details';
 
 const Tab = createBottomTabNavigator();
