@@ -20,14 +20,12 @@ const LoginScreen = ({navigation}) => {
         password,
         user => {
           // Alert.alert('Welcome', 'Logged In');
-          // // Navigate to the home screen or perform other actions as needed
-          // navigation.navigate('Details', {userId: user.id});
-          //Store session information
+          // navigation.replace('BottomNavigator', {userId: user.id});
+          // Store session information
           AsyncStorage.setItem('userId', user.id.toString())
             .then(() => {
               Alert.alert('Welcome', 'Logged In');
-              // Navigate to the home screen or perform other actions as needed
-              navigation.replace('BottomNavigator', {userId: user.id});
+              navigation.replace('BottomNavigator');
             })
             .catch(error => {
               console.error('Error storing session:', error);

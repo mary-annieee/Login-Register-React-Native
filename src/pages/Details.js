@@ -3,6 +3,8 @@ import {View, Text, StyleSheet,TouchableOpacity,Image,Alert,Modal,TextInput} fro
 import {db} from '../utils/Database.js';
 import Btn from '../components/Btn';
 import {openDatabase} from 'react-native-sqlite-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Details = ({route,navigation}) => {
   let db = openDatabase({name: 'mydb.db'});
@@ -10,15 +12,14 @@ const Details = ({route,navigation}) => {
   const [first_name, setFirstName] = useState(user.first_name);
   const [last_name, setLastName] = useState(user.last_name);
   const [email, setEmail] = useState(user.email);
-  const {userId} = route.params; 
+  // const {userId} = route.params; 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const toggleEditModal = () => {
     setIsEditModalVisible(!isEditModalVisible);
   };
   const saveEditedUser = () => {
-    // Perform the user data update logic here (e.g., update the database)
-    // Then close the modal
+    
     console.log(first_name);
       db.transaction(tx => {
         tx.executeSql(
@@ -44,6 +45,8 @@ const Details = ({route,navigation}) => {
   
 
   useEffect(() => {
+    AsyncStorage.getItem('userId')
+      .then(userId => {
     // Retrieve user details from the database based on user ID or email
     // Pass the user ID as a navigation parameter
     db.transaction(tx => {
@@ -63,7 +66,8 @@ const Details = ({route,navigation}) => {
         },
       );
     });
-  }, [route.params]);
+  });
+  });
 
   let deleteUser = id => {
     db.transaction(tx => {
@@ -90,7 +94,14 @@ const Details = ({route,navigation}) => {
     });
   };
 const handleLogout=()=>{
-navigation.navigate('Login');
+  AsyncStorage.removeItem('userId')
+  .then(() => {
+    navigation.navigate('Login');
+  })
+  .catch(error => {
+    console.error('Error clearing user session:', error);
+    navigation.navigate('Login');
+  });
 }
   return (
     <View style={styles.container}>

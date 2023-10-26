@@ -10,8 +10,8 @@ const detailsName = 'Details';
 
 const Tab = createBottomTabNavigator();
 
-function MainContainer({route}) {
-  const {userId} = route.params;
+function MainContainer() {
+  
   return (
     <Tab.Navigator
       initialRouteName={homeName}
@@ -32,12 +32,12 @@ function MainContainer({route}) {
       <Tab.Screen
         name={homeName}
         component={CryptoScreen}
-        initialParams={{userId}}
+        
       />
       <Tab.Screen
         name={detailsName}
         component={DetailsScreen}
-        initialParams={{userId}}
+        
       />
     </Tab.Navigator>
   );
