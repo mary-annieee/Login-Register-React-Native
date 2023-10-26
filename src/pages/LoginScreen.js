@@ -9,8 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [errorPass, setErrorPass] = useState(null);
+  const [error, setError] = useState('');
 
   const handleLogin = () => {
     if (!email || !password) {
@@ -24,16 +23,16 @@ const LoginScreen = ({navigation}) => {
           // // Navigate to the home screen or perform other actions as needed
           // navigation.navigate('Details', {userId: user.id});
           //Store session information
-        AsyncStorage.setItem('userId', user.id.toString())
-        .then(() => {
-          Alert.alert('Welcome', 'Logged In');
-          // Navigate to the home screen or perform other actions as needed
-          navigation.navigate('BottomNavigator', { userId: user.id });
-        })
-        .catch(error => {
-          console.error('Error storing session:', error);
-          setError('An error occurred while storing the session');
-        });
+          AsyncStorage.setItem('userId', user.id.toString())
+            .then(() => {
+              Alert.alert('Welcome', 'Logged In');
+              // Navigate to the home screen or perform other actions as needed
+              navigation.replace('BottomNavigator', {userId: user.id});
+            })
+            .catch(error => {
+              console.error('Error storing session:', error);
+              setError('An error occurred while storing the session');
+            });
         },
         error => {
           setError(error);
@@ -114,9 +113,6 @@ const LoginScreen = ({navigation}) => {
             value={email}
             onChangeText={text => setEmail(text)}
           />
-          <View style={{marginRight: 70}}>
-            {error && <Text style={{color: 'red', fontSize: 12}}>{error}</Text>}
-          </View>
 
           <Field
             placeholder="Password"
@@ -124,9 +120,10 @@ const LoginScreen = ({navigation}) => {
             value={password}
             onChangeText={text => setPassword(text)}
           />
-          {errorPass && (
-            <Text style={{color: 'red', fontSize: 12}}>{errorPass}</Text>
-          )}
+
+          <View style={{marginRight: 70}}>
+            {error && <Text style={{color: 'red', fontSize: 12}}>{error}</Text>}
+          </View>
 
           <View>
             <Btn
@@ -135,7 +132,6 @@ const LoginScreen = ({navigation}) => {
               btnLabel="Login"
               Press={handleLogin}
             />
-            {/* Press={() => alert("Logged In")}  */}
           </View>
           <View
             style={{

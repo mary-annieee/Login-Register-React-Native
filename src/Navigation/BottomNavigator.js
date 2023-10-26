@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeScreen from '../pages/StockRate';
+import CryptoScreen from '../pages/Crypto';
 import DetailsScreen from '../pages/Details';
 
 //Screen names
@@ -25,15 +25,13 @@ function MainContainer({route}) {
           } else if (rn === detailsName) {
             iconName = focused ? 'list' : 'list-outline';
           }
-          // You can return any component that you like here!
+
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-      })}
-      
-    >
+      })}>
       <Tab.Screen
         name={homeName}
-        component={HomeScreen}
+        component={CryptoScreen}
         initialParams={{userId}}
       />
       <Tab.Screen
