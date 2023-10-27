@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet,TouchableOpacity,Image,Alert,Modal,TextInput} from 'react-native';
+import {ScrollView,View, Text, StyleSheet,TouchableOpacity,Image,Alert,Modal,TextInput, Button, PermissionsAndroid} from 'react-native';
 import Btn from '../components/Btn';
 import {openDatabase} from 'react-native-sqlite-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 const Details = ({navigation}) => {
@@ -11,8 +13,35 @@ const Details = ({navigation}) => {
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  // const {userId} = route.params; 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [imageSource, setImageSource] = useState();
+
+  const openCamera = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        const result = await launchCamera();
+        if (result.assets && result.assets.length > 0) {
+          setImageSource(result.assets[0].uri);
+        }
+      }
+    } catch (error) {
+      console.error('Error in openCamera:', error);
+    }
+  };
+
+  const openGallery = async () => {
+    try {
+      const result = await launchImageLibrary({ mediaType: 'photo' });
+      if (result.assets && result.assets.length > 0) {
+        setImageSource(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error in openGallery:', error);
+    }
+  };
 
   const toggleEditModal = () => {
     setIsEditModalVisible(!isEditModalVisible);
@@ -102,6 +131,17 @@ const handleLogout=()=>{
 }
   return (
     <View style={styles.container}>
+    <ScrollView >
+      {imageSource ? (
+        <Image source={{ uri: imageSource }} style={styles.profileImage} />
+      ) : (
+        <Text>No Image</Text>
+      )}
+      <View style={styles.buttonContainerCamera}>
+      <Button title="Open Camera" onPress={openCamera} />
+      <Button title="Open Gallery" onPress={openGallery} />
+      </View>
+
       {user ? (
         <View>
           <Text style={styles.text}>User Profile</Text>
@@ -206,8 +246,8 @@ const handleLogout=()=>{
               Press={handleLogout}
             />
             </View>
+    </ScrollView>
     </View>
-
   );
 };
 const styles = StyleSheet.create({
@@ -215,6 +255,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingRight:10,
+    paddingLeft:10
   },
   text: {
     fontSize: 16,
@@ -243,16 +285,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
-  buttonContainer: {
+  buttonContainerCamera: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginBottom:20
+
   },
   button1: {
     backgroundColor: 'darkgreen', // You can set your desired background color
     padding: 10,
     margin: 5,
     
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 100, // To make it a circular image
+    marginBottom: 20,
+    marginTop:50,
+  },
+  buttonContainer: {
+    flexDirection: 'row', // Align buttons side by side
+    justifyContent: 'space-between', // Add space between buttons
+    width: '100%',
   },
 });
 export default Details;
