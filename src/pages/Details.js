@@ -1,17 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet,TouchableOpacity,Image,Alert,Modal,TextInput} from 'react-native';
-import {db} from '../utils/Database.js';
 import Btn from '../components/Btn';
 import {openDatabase} from 'react-native-sqlite-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const Details = ({route,navigation}) => {
+const Details = ({navigation}) => {
   let db = openDatabase({name: 'mydb.db'});
   const [user, setUser] = useState({});
-  const [first_name, setFirstName] = useState(user.first_name);
-  const [last_name, setLastName] = useState(user.last_name);
-  const [email, setEmail] = useState(user.email);
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   // const {userId} = route.params; 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
@@ -19,8 +18,6 @@ const Details = ({route,navigation}) => {
     setIsEditModalVisible(!isEditModalVisible);
   };
   const saveEditedUser = () => {
-    
-    console.log(first_name);
       db.transaction(tx => {
         tx.executeSql(
           'UPDATE users SET first_name=?,last_name=?,email=? WHERE id=?',
@@ -119,7 +116,11 @@ const handleLogout=()=>{
       )}
       <View style={styles.belowView}>
                 <TouchableOpacity
-                  onPress={() => {toggleEditModal()
+                  onPress={() => {
+                    setFirstName(user.first_name); 
+                    setLastName(user.last_name);
+                    setEmail(user.email);
+                    toggleEditModal()
                   }}>
                   <Image
                     source={require('../assets/edit.png')}
@@ -132,7 +133,7 @@ const handleLogout=()=>{
       transparent={true}
       animationType="slide">
       <View style={styles.modalContainer}>
-        {/* Modal content, e.g., edit form */}
+       
         <View style={{backgroundColor:'white',height:300,width:'90%',padding:30,borderRadius:10}}>
         <Text>Edit User Details</Text>
         <TextInput
@@ -141,16 +142,16 @@ const handleLogout=()=>{
           onChangeText={(text) => setFirstName(text)}
         />
          <TextInput
-          placeholder="Enter User Email"
+          placeholder="Last Name"
           value={last_name}
           onChangeText={txt => setLastName(txt)}
         />
         <TextInput
-          placeholder="Enter User Address"
+          placeholder="Email"
           value={email}
           onChangeText={txt => setEmail(txt)}
         />
-        {/* Add more input fields for other user details */}
+       
         <View style={styles.buttonContainer}>
   <TouchableOpacity
     style={styles.button1}
