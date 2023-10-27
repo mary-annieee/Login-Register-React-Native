@@ -9,22 +9,21 @@ import Details from '../pages/Details';
 import EditTask from '../pages/EditUser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const Stack = createNativeStackNavigator();
 
-const StackNavigator = () => {
 
-  const Stack = createNativeStackNavigator();
+const StackNavigator = ({ initialRouteName }) => {
+  
 
+//initialRouteName='Login'
   return (
-    
     <Stack.Navigator
-      screenOptions={{headerShown: false}}
-      initialRouteName='Login'>
-      <Stack.Screen name="Stock" component={Stock} />
-      <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
+      screenOptions={{headerShown: false}} initialRouteName={initialRouteName}>
+        
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Details" component={Details} />
-      <Stack.Screen name="EditTask" component={EditTask} />
+      
     </Stack.Navigator>
   );
 };
