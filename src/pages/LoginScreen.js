@@ -22,7 +22,6 @@ const LoginScreen = ({navigation}) => {
           // Alert.alert('Welcome', 'Logged In');
           // navigation.replace('BottomNavigator', {userId: user.id});
           // Store session information
-          AsyncStorage.setItem('keeploggedin',JSON.stringify(true))
           AsyncStorage.setItem('userId', user.id.toString())
             .then(() => {
               Alert.alert('Welcome', 'Logged In');
